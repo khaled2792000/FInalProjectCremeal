@@ -1,0 +1,46 @@
+{
+  "cli": {
+    "version": ">= 9.0.8"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "WebClientId":"526943022894-gkqa1gkor3uji9oorglnl1q29d19qjid.apps.googleusercontent.com",
+        "PUBLISHABLE_KEY":"pk_test_51PQdrEJDjk3FEs5Uu8N9EKQAsOHoVWfXKSWiJXKasUZNIXbFGQY3Sb6mmnE97511z4s023E9DMxQfvd754peYEOc00mTRWe9H7"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "WebClientId":"526943022894-gkqa1gkor3uji9oorglnl1q29d19qjid.apps.googleusercontent.com",
+        "PUBLISHABLE_KEY":"pk_test_51PQdrEJDjk3FEs5Uu8N9EKQAsOHoVWfXKSWiJXKasUZNIXbFGQY3Sb6mmnE97511z4s023E9DMxQfvd754peYEOc00mTRWe9H7"
+      }
+    },
+    "production": {
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": false
+      },
+      "env": {
+        "WebClientId":"526943022894-gkqa1gkor3uji9oorglnl1q29d19qjid.apps.googleusercontent.com",
+        "PUBLISHABLE_KEY":"pk_test_51PQdrEJDjk3FEs5Uu8N9EKQAsOHoVWfXKSWiJXKasUZNIXbFGQY3Sb6mmnE97511z4s023E9DMxQfvd754peYEOc00mTRWe9H7"
+      }
+    }
+  }
+}

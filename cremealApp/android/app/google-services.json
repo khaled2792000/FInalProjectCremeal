@@ -1,0 +1,54 @@
+{
+    "project_info": {
+      "project_number": "526943022894",
+      "project_id": "cremealapp",
+      "storage_bucket": "cremealapp.appspot.com"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:526943022894:android:b132e4bfc6c5acb67e14bf",
+          "android_client_info": {
+            "package_name": "com.cremeal.firebasesignin"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "526943022894-sdod2j54mdu3g6nkms3c9uoheg16bk0d.apps.googleusercontent.com",
+            "client_type": 1,
+            "android_info": {
+              "package_name": "com.cremeal.firebasesignin",
+              "certificate_hash": "1828b45e732135e1b74610f236f0b9c0a00cdac9"
+            }
+          },
+          {
+            "client_id": "526943022894-gkqa1gkor3uji9oorglnl1q29d19qjid.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyC72tgta6WBi7zKGTBJxQsga2nxnDD9HuE"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "526943022894-gkqa1gkor3uji9oorglnl1q29d19qjid.apps.googleusercontent.com",
+                "client_type": 3
+              },
+              {
+                "client_id": "526943022894-1b7r1t09vqofqltcfl9jubqi9rlgs549.apps.googleusercontent.com",
+                "client_type": 2,
+                "ios_info": {
+                  "bundle_id": "com.misscoding.googleauthexporeactnative"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }
