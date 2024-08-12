@@ -10,7 +10,6 @@ namespace CremealServer.Controllers
     /// Controller for handling image prediction requests.
     /// </summary>
     [ApiController]
-    [Authorize]
     [Route("[controller]")]
     public class PredictionController : Controller
     {
