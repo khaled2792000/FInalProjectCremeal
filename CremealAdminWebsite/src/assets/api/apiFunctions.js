@@ -43,7 +43,6 @@ export const useUsers = (token) => {
         if (error.response?.status === 401) {
           navigate('/login');
         }
-        console.error('Error fetching users:', error);
         toast.error('Error getting users');
       }
     },
@@ -114,7 +113,6 @@ export const useReligions = (token) => {
             accept: '*/*',
           },
         });
-        console.log(data)
         return data.data;
       } catch (error) {
         if (error.response?.status === 401) {
@@ -150,7 +148,6 @@ export const useAllergics = (token) => {
         if (error.response?.status === 400) {
           toast.error(error.response?.data)
         }
-        console.log(error)
         toast.error('Error getting allergens');
       }
     },
@@ -281,7 +278,6 @@ export const useUpdatePlan = (token) => {
         if (error.response?.status === 401) {
           navigate('/login');
         }
-        console.error('Error updating plan:', error);
         toast.error(error.message)
       }
     },

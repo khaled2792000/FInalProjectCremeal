@@ -9,7 +9,7 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 import MonetizationOnTwoToneIcon from "@mui/icons-material/MonetizationOnTwoTone";
 import FastfoodTwoToneIcon from "@mui/icons-material/FastfoodTwoTone";
-import { LineChart } from "@mui/x-charts";
+
 import { UserContext } from "../App";
 import {
   useAllergics,
@@ -68,7 +68,6 @@ export default function GeneralAnalytics() {
         <CircularProgress color="inherit" />
       </Backdrop>
     );
-
   dataReligions = dataReligions.map((obj) => ({
     id: obj.id - 1,
     value: obj.count,
@@ -80,12 +79,12 @@ export default function GeneralAnalytics() {
     label: item.label,
   }));
   dataTransactions = dataTransactions.map((transaction) => ({
-    Id: transaction.Id,
-    UserId: transaction.UserId,
-    Amount: transaction.Amount,
-    Currency: transaction.Currency,
-    Description: transaction.Description,
-    Date: new Date(transaction.Date),
+    Id: transaction.id,
+    UserId: transaction.userId,
+    Amount: transaction.amount / 100,
+    Currency: transaction.currency,
+    Description: transaction.description,
+    Date: new Date(transaction.date),
   }));
   dataUsers = processUsersData(dataUsers);
 
@@ -112,7 +111,7 @@ export default function GeneralAnalytics() {
                 }}
               />
             }
-            value={dataStatistics[1]?.value ?? "0"}
+            value={dataStatistics[1]?.value / 100 ?? "0"}
           />
         </Grid>
         <Grid item xs={12} sm={12} xl={4}>
@@ -174,10 +173,12 @@ export default function GeneralAnalytics() {
               }}
             >
               <LineChartComponent
-                data={dataTransactions.map((transaction) => ({
-                  date: transaction.Date.toISOString().split("T")[0], // Format date as needed
-                  amount: transaction.Amount,
-                }))}
+                data={dataTransactions.map((transaction) => {
+                  return {
+                    date: transaction.Date.toISOString().split("T")[0],
+                    amount: transaction.Amount,
+                  };
+                })}
               />
             </Card>
           </Card>
@@ -192,30 +193,36 @@ export default function GeneralAnalytics() {
             }}
           >
             {dataTransactions.length > 0 ? (
-              dataTransactions.map((transaction, index) => (
-                <Card key={index} sx={{ margin: 1 }}>
-                  <CardHeader
-                    title={`Transaction #${transaction.Id}`}
-                    subheader={`Date: ${
-                      transaction.Date.toISOString().split("T")[0]
-                    }`}
-                  />
-                  <Card sx={{ padding: 2 }}>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12}>
-                        <strong>Amount:</strong> {transaction.Amount}{" "}
-                        {transaction.Currency}
+              dataTransactions.map((transaction, index) => {
+                const formattedDate = new Date(transaction.Date)
+                  .toISOString()
+                  .split("T")[0];
+
+                return (
+                  <Card key={index} sx={{ margin: 1 }}>
+                    <CardHeader
+                      title={`Transaction #${transaction.Id}`}
+                      subheader={`Date: ${formattedDate}`} // Use formattedDate here
+                    />
+
+                    <Card sx={{ padding: 2 }}>
+                      <Grid container spacing={1}>
+                        <Grid item xs={12}>
+                          <strong>Amount:</strong> {transaction.Amount}{" "}
+                          {transaction.Currency}
+                        </Grid>
+                        <Grid item xs={12}>
+                          <strong>Description:</strong>{" "}
+                          {transaction.Description}
+                        </Grid>
+                        <Grid item xs={12}>
+                          <strong>User ID:</strong> {transaction.UserId}
+                        </Grid>
                       </Grid>
-                      <Grid item xs={12}>
-                        <strong>Description:</strong> {transaction.Description}
-                      </Grid>
-                      <Grid item xs={12}>
-                        <strong>User ID:</strong> {transaction.UserId}
-                      </Grid>
-                    </Grid>
+                    </Card>
                   </Card>
-                </Card>
-              ))
+                );
+              })
             ) : (
               <Card sx={{ margin: 1, padding: 2, textAlign: "center" }}>
                 <CardHeader title="No Transactions Available" />
