@@ -36,7 +36,6 @@ export default function Login() {
         description: "You can continue",
         onAutoClose: () => {
           setToken(data);
-          sessionStorage.setItem("AdminToken", data);
         },
         duration: 3,
       });

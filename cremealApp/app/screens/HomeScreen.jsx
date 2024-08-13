@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableHighlight,
 } from "react-native";
-import React, { useEffect, useState,useCallback  } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import MealsComponent from "../components/MealsComponent";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,13 +16,17 @@ import {
 } from "../../assets/utils/api/user_api";
 import { apiUrl } from "../../assets/utils/api/ApiManager";
 import AppLoader from "../components/AppLoader";
-import {Toastwarning,DialogwarningButton} from "../components/alerts";
-import { useDispatch, useSelector } from 'react-redux';
-import { setUserInformation,setUserImage,setUser_login_google } from '../../redux/slices/userSlice';
+import { Toastwarning, DialogwarningButton } from "../components/alerts";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setUserInformation,
+  setUserImage,
+  setUser_login_google,
+} from "../../redux/slices/userSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { Dialog} from "react-native-alert-notification";
-import { useIsFocused,useFocusEffect  } from "@react-navigation/native";
+import { Dialog } from "react-native-alert-notification";
+import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 
 export function HomeScreen({ navigation }) {
   const [userMeal, setUserMeals] = useState([]);
@@ -33,7 +37,9 @@ export function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
   const userInformation = useSelector((state) => state.user.userInformation);
   const UserImage = useSelector((state) => state.user.userImage);
-  const firstTimeloginGoogle = useSelector((state) => state.user.firstTimeloginGoogle);
+  const firstTimeloginGoogle = useSelector(
+    (state) => state.user.firstTimeloginGoogle
+  );
   const isFocused = useIsFocused();
 
   useFocusEffect(
@@ -45,55 +51,57 @@ export function HomeScreen({ navigation }) {
       };
 
       user_get_meals(userInformation)
-      .then((result) => {
-        const allMeals = result.data;
-        setUserMeals(allMeals);
-        const favoriteMeals = allMeals.filter((meal) => meal.favorite);
-        setFavoriteMealsState(favoriteMeals);
-        dispatch({
-          type: 'FavoriteMeal/setFavoriteMeals',
-          payload: favoriteMeals,
-        });
-      })
-      .catch((err) => {
-        setisExpired(true);
-        console.log("user_get_meals error: " + err);
-      })
-      .finally(decrementPendingApiCalls);
-    
+        .then((result) => {
+          const allMeals = result.data;
+          setUserMeals(allMeals);
+          const favoriteMeals = allMeals.filter((meal) => meal.favorite);
+          setFavoriteMealsState(favoriteMeals);
+          dispatch({
+            type: "FavoriteMeal/setFavoriteMeals",
+            payload: favoriteMeals,
+          });
+        })
+        .catch((err) => {
+          setisExpired(true);
+          console.log("user_get_meals error: " + err);
+        })
+        .finally(decrementPendingApiCalls);
 
       user_get_image(userInformation)
         .then((result) => {
           if (result.status == 200) {
-            dispatch(setUserImage(apiUrl + "/Images/UsersImages/" + result.data));
-            console.log("Image data found: ", apiUrl + "/Images/UsersImages/" + result.data);
-
+            dispatch(
+              setUserImage(apiUrl + "/Images/UsersImages/" + result.data)
+            );
+            console.log(
+              "Image data found: ",
+              apiUrl + "/Images/UsersImages/" + result.data
+            );
           } else {
             console.log("Image data not found in the result.");
-
           }
         })
         .catch((err) => {
           console.log("user_get_image error: " + err);
-
         })
         .finally(decrementPendingApiCalls);
-
     }, [userInformation, isFocused])
   );
 
-
   useEffect(() => {
-    console.log(pendingApiCalls)
+    console.log(pendingApiCalls);
     if (pendingApiCalls === 0) {
-       setLoading(false);
-       console.log("UserImage ",UserImage)
-       if(isExpired){
-        Toastwarning("Opss","It's been 24 hours since you logged in. You have to log in again")
-        LogoutOnPress()
+      setLoading(false);
+      console.log("UserImage ", UserImage);
+      if (isExpired) {
+        Toastwarning(
+          "Opss",
+          "It's been 24 hours since you logged in. You have to log in again"
+        );
+        LogoutOnPress();
         navigation.navigate("LoginScreen");
-       }
-       if(firstTimeloginGoogle){
+      }
+      if (firstTimeloginGoogle) {
         DialogwarningButton(
           "Warning",
           "If you suffer from a certain food allergy, please go and add it in the settings and also make sure you have added your religion",
@@ -102,15 +110,10 @@ export function HomeScreen({ navigation }) {
             Dialog.hide();
           },
           () => {}
-      
         );
-      
-       }
+      }
     }
-
   }, [pendingApiCalls]);
-
-
 
   const seeAll = (title, meals) => {
     navigation.navigate("GeneratedMeal", {
@@ -119,34 +122,32 @@ export function HomeScreen({ navigation }) {
     });
   };
   if (!userInformation) {
-    return null; 
+    return null;
   }
   const LogoutOnPress = async () => {
     try {
-
       await AsyncStorage.removeItem("userInformation");
       dispatch(setUserInformation(null));
       dispatch(setUserImage(null));
-  
+
       const isSignedIn = await GoogleSignin.isSignedIn();
-      const WebClientId = process.env.EXPO_PUBLIC_WebClientId 
+      const WebClientId = process.env.EXPO_PUBLIC_WebClientId;
       if (isSignedIn) {
         GoogleSignin.configure({
-            webClientId:
-            WebClientId,
-          });
+          webClientId: WebClientId,
+        });
 
         dispatch(setUser_login_google(false));
         await GoogleSignin.revokeAccess();
         await GoogleSignin.signOut();
       }
-    
+
       navigation.navigate("LoginScreen");
     } catch (e) {
       console.log("Logout error: " + e);
     }
   };
-  
+
   return (
     <SafeAreaView style={stylesFn.SafeAreaView}>
       {loading ? (

@@ -12,13 +12,12 @@ export const useLogin = () => {
         const { data } = await api.post('/Admin/AdminSignIn', {
           password: credentials.password,
         });
+        sessionStorage.setItem("AdminToken", data);
         return data;
       } catch (error) {
         if (error.response?.status === 401) {
-
           navigate('/login');
         }
-
       }
     }
   })
