@@ -85,11 +85,11 @@
         private void Log(string level, string message)
         {
             string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [{level}] {message}";
-            Console.WriteLine(logMessage); // Output to console
+            Console.WriteLine(logMessage);
 
             try
             {
-                File.AppendAllText(logFilePath, logMessage + Environment.NewLine); // Write to file
+                File.AppendAllText(logFilePath, logMessage + Environment.NewLine); 
             }
             catch (IOException ex)
             {
