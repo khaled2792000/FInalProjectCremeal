@@ -13,11 +13,13 @@ export const useLogin = () => {
           password: credentials.password,
         });
         sessionStorage.setItem("AdminToken", data);
+
         return data;
       } catch (error) {
         if (error.response?.status === 401) {
           navigate('/login');
         }
+        return null;
       }
     }
   })

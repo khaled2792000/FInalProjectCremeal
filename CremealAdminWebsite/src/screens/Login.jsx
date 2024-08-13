@@ -19,9 +19,12 @@ export default function Login() {
 
   useEffect(() => {
     const storedToken = sessionStorage.getItem("AdminToken");
+    console.log(storedToken);
     if (storedToken) {
       setToken(storedToken);
-    } else if (Object.values(token).length !== 0) {
+    } else if (token == null) {
+      return;
+    } else if (Object?.values(token)?.length !== 0) {
       sessionStorage.setItem("AdminToken", JSON.stringify(token));
     }
   }, [token, setToken]);
@@ -32,6 +35,9 @@ export default function Login() {
     actions.resetForm();
     try {
       const data = await mutateAsync(values);
+      if (data == null) {
+        toast.error("No token received");
+      }
       toast.success("Loaded the token", {
         description: "You can continue",
         onAutoClose: () => {
@@ -40,9 +46,7 @@ export default function Login() {
         duration: 3,
       });
     } catch (error) {
-      toast.error("Error with getting the token", {
-        description: error?.response?.data ?? "Error",
-      });
+      toast.error("Error with getting the token");
     }
   };
 
@@ -63,7 +67,7 @@ export default function Login() {
     onSubmit,
   });
 
-  if (!(Object.values(token).length === 0)) {
+  if (token && Object.keys(token).length > 0) {
     return <Navigate to="/Admin/statistics" replace />;
   }
 
