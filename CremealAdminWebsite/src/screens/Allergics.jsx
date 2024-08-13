@@ -178,7 +178,7 @@ const AllergensTable = () => {
     paginationDisplayMode: "pages",
     initialState: {
       pagination: {
-        pageSize: 5,
+        pageSize: 8,
       },
     },
     manualPagination: false,
