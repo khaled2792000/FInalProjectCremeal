@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { AntDesign,MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, {
     interpolate,
@@ -7,7 +7,7 @@ import Animated, {
     useSharedValue,
     withSpring,
 } from "react-native-reanimated";
-import { Add_To_Favorite ,Remove_From_Favorite} from "../../assets/utils/api/meal_api";
+import { Add_To_Favorite, Remove_From_Favorite } from "../../assets/utils/api/meal_api";
 
 import {
     TouchableOpacity,
@@ -23,7 +23,8 @@ import {
 import * as FileSystem from 'expo-file-system';
 import Share from 'react-native-share';
 import tailwind from 'twrnc';
-
+import { useDispatch } from 'react-redux';
+import { addFavoriteMeal, removeFavoriteMeal } from '../../redux/slices/FavoriteMealSlice';
 const springConfig = {
     mass: 1,
     velocity: 0,
@@ -31,78 +32,75 @@ const springConfig = {
     damping: 45,
 };
 
-const PopupMenu = ({ meal, user })  => {
+const PopupMenu = ({ meal, user }) => {
     const [visible, setVisible] = useState(false);
     const scale = useRef(new RNAnimated.Value(0)).current;
     const toggleAnim = useSharedValue(0);
-    const [liked, setLiked] = useState(meal.favorite);  
+    const [liked, setLiked] = useState(meal.favorite);
+
+    const dispatch = useDispatch();
 
     const AddToFavorite = () => {
-        console.log("AddToFavorite: ",meal.id)
+        console.log("AddToFavorite: ", meal.id)
         console.log(user.jwtToken)
-        Add_To_Favorite(meal.id, user.jwtToken)
-          .then((result) => {
-            console.log(result)
-            if (result.status === 200) {
-                setLiked(true);
-            }
-          })
-          .catch((err) => console.log(err));
-      };
-    
-      const RemoveFromFavorite = () => {
-        console.log(meal.id)
-        Remove_From_Favorite(meal.id, user.jwtToken)
-          .then((result) => {
-            console.log(result)
-            if (result.status === 200) {
-                setLiked(false);
-            }
-          })
-          .catch((err) => console.log(err));
-      };
-      const inviteOnPress = async () => {
+        return Add_To_Favorite(meal.id, user.jwtToken)
+            .then((result) => {
+                console.log(result)
+            })
+            .catch((err) => console.log(err));
+    };
+
+    const RemoveFromFavorite = () => {
+        console.log("Removing meal with ID:", meal.id); // Check if this logs
+        return Remove_From_Favorite(meal.id, user.jwtToken)
+            .then((result) => {
+                console.log(result)
+            })
+            .catch((err) => console.log(err));
+    };
+
+
+    const inviteOnPress = async () => {
         console.log(meal);
         const ingredients = meal.ingredients ? meal.ingredients.split(', ').join('\n- ') : '';
         const instructions = meal.instructions ? meal.instructions.split('\n').map(instruction => instruction.trim()).join('\n') : '';
-    
+
         const message = `
     🍽 Meal: ${meal.name}
-    
+
     🕒 Cooking Time: ${meal.cookingTime} minutes
-    
+
     🔍 Description: ${meal.description}
-    
+
     🌶 Difficulty: ${meal.difficulty}
-    
+
     📝 Ingredients:
     - ${ingredients}
-    
+
     👩‍🍳 Instructions:
     ${instructions}
-    
+
     This meal was created by the CremEAL App. Check out more delicious recipes at appLink
-    
+
     Enjoy your meal! 🍛
         `;
-    
+
         try {
             const imageUri = `${FileSystem.cacheDirectory}${meal.name}.jpg`;
             await FileSystem.downloadAsync(meal.imageLink, imageUri);
-    
+
             const shareOptions = {
                 title: 'Share your meal',
                 message: message.trim(),
-                url: 'file://' + imageUri, 
+                url: 'file://' + imageUri,
                 type: 'image/jpeg',
             };
-    
+
             await Share.open(shareOptions);
         } catch (error) {
             console.log('Error sharing:', error);
         }
     };
-    
 
     const dotTransform = useAnimatedStyle(() => {
         return {
@@ -113,6 +111,7 @@ const PopupMenu = ({ meal, user })  => {
             ],
         };
     });
+
     const centerLineTransform = useAnimatedStyle(() => {
         return {
             transform: [
@@ -122,11 +121,12 @@ const PopupMenu = ({ meal, user })  => {
             ],
         };
     });
+
     const topLineTransform = useAnimatedStyle(() => {
         return {
             transform: [
                 {
-                    translateX: -6.5, 
+                    translateX: -6.5,
                 },
                 {
                     rotate: `${interpolate(toggleAnim.value, [0, 1], [0, 45])}deg`,
@@ -142,13 +142,13 @@ const PopupMenu = ({ meal, user })  => {
         return {
             transform: [
                 {
-                    translateX: 6.5, 
+                    translateX: 6.5,
                 },
                 {
                     rotate: `${interpolate(toggleAnim.value, [0, 1], [0, 45])}deg`,
                 },
                 {
-                    translateX: interpolate(toggleAnim.value, [0, 1], [-8.5, -10]), 
+                    translateX: interpolate(toggleAnim.value, [0, 1], [-8.5, -10]),
                 },
             ],
         };
@@ -171,21 +171,24 @@ const PopupMenu = ({ meal, user })  => {
             easing: Easing.linear,
         }).start(() => to === 0 && setVisible(false));
     }
+
     function handleMainPress() {
-        resizeBox(1)
-        handlePress()
+        resizeBox(1);
+        handlePress();
     }
+
     function TouchStart() {
-        resizeBox(0)
-        handlePress()
+        resizeBox(0);
+        handlePress();
     }
+
     return (
         <View style={{ flex: 1 }}>
             <View style={tailwind.style("flex-1 items-center justify-center")}>
                 <TouchableWithoutFeedback
                     onPress={handleMainPress}
                     style={tailwind.style(
-                        "relative w-14 bg-white h-14 rounded-lg flex justify-center items-center", 
+                        "relative w-14 bg-white h-14 rounded-lg flex justify-center items-center",
                     )}
                 >
                     <View style={tailwind.style("flex flex-col")}>
@@ -198,7 +201,7 @@ const PopupMenu = ({ meal, user })  => {
                             ]}
                         >
                             <View
-                                style={tailwind.style("h-1.5 w-1.5 bg-black rounded-full")} 
+                                style={tailwind.style("h-1.5 w-1.5 bg-black rounded-full")}
                             />
                         </Animated.View>
                         <Animated.View
@@ -208,13 +211,13 @@ const PopupMenu = ({ meal, user })  => {
                             ]}
                         >
                             <View
-                                style={tailwind.style("h-0.90 w-3.5 rounded-md bg-black mb-0.75")} 
+                                style={tailwind.style("h-0.90 w-3.5 rounded-md bg-black mb-0.75")}
                             />
                         </Animated.View>
 
                         <Animated.View
                             style={[
-                                tailwind.style("h-0.80 w-7 rounded-md bg-black"), 
+                                tailwind.style("h-0.80 w-7 rounded-md bg-black"),
                                 centerLineTransform,
                             ]}
                         />
@@ -225,7 +228,7 @@ const PopupMenu = ({ meal, user })  => {
                             ]}
                         >
                             <View
-                                style={tailwind.style("h-0.90 w-3.5 rounded-md bg-black mt-0.75")} 
+                                style={tailwind.style("h-0.90 w-3.5 rounded-md bg-black mt-0.75")}
                             />
                         </Animated.View>
                     </View>
@@ -246,11 +249,21 @@ const PopupMenu = ({ meal, user })  => {
                         <TouchableOpacity
                             onPress={() => {
                                 if (liked) {
-                                    RemoveFromFavorite();
+                                    RemoveFromFavorite()
+                                        .then(() => {
+                                            setLiked(false);
+                                            dispatch(removeFavoriteMeal({ id: meal.id }));
+                                        })
+                                        .catch((err) => console.log(err));
                                 } else {
-                                    AddToFavorite();
+                                    AddToFavorite()
+                                        .then(() => {
+                                            setLiked(true);
+                                            dispatch(addFavoriteMeal(meal)); 
+                                        })
+                                        .catch((err) => console.log(err));
                                 }
-                                setVisible(false);
+                                setTimeout(() => setVisible(false), 100);
                             }}
                             style={[
                                 styles.option,
@@ -258,11 +271,16 @@ const PopupMenu = ({ meal, user })  => {
                             ]}
                         >
                             <Text>Favorite</Text>
-                            <MaterialIcons name={liked ? "favorite" : "favorite-outline"} size={32} color={liked ? "black" : "black"} style={{ marginLeft: 10 }} />
+                            <MaterialIcons
+                                name={liked ? "favorite" : "favorite-outline"}
+                                size={32}
+                                color={liked ? "black" : "black"}
+                                style={{ marginLeft: 10 }}
+                            />
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => {
-                                inviteOnPress()
+                                inviteOnPress();
                                 setVisible(false);
                             }}
                             style={[

@@ -160,31 +160,7 @@ const RegisterScreen = () => {
           </Text>
         </TouchableOpacity>
     
-        {!nextInputs && (
-        <>
-          <View style={styles.splitter}>
-            <View style={styles.line}></View>
-            <Text>Or Sign Up with</Text>
-            <View style={styles.line}></View>
-          </View>
 
-          <TouchableOpacity
-            style={[
-              styles.btn,
-              {
-                backgroundColor: "transparent",
-                borderColor: "gray",
-                borderWidth: 1,
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-              },
-            ]}
-          >
-            <AntDesign name="google" size={24} color="#0e82cd" />
-            <Text>Sign up With Google</Text>
-          </TouchableOpacity>
-        </>
-      )}
         <View
           style={{
             flexDirection: "row",
@@ -192,6 +168,7 @@ const RegisterScreen = () => {
             justifyContent: "center",
             alignItems: "center",
             height: (height * 20) / 100,
+            
           }}
         >
           <Text>Don't Have An Account ?</Text>

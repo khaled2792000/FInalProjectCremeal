@@ -5,16 +5,34 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import MealsComponent from "../components/MealsComponent";
+import React, { useState, useEffect } from "react";
+import { useNavigation, useFocusEffect,useIsFocused } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 export function GeneratedMeal({ route }) {
   const { navigate } = useNavigation();
-  const mealL = route.params?.meals?.flat() || [];
+  const [mealL, setMealL] = useState(route.params?.meals?.flat() || []);
   const pageTitle = route.params.title;
+  const favoriteMeals = useSelector((state) => state.FavoriteMeal.FavoriteMeals);
+  const isFocused = useIsFocused();
+  const navigation = useNavigation();
   const LeftArrowOnPress = () => {
     navigate("HomeScreen");
   };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (pageTitle === "Favorite meal") {
+        setMealL(favoriteMeals);
+        console.log("setMealL(favoriteMeals):", favoriteMeals)
+
+      }
+    });
+
+    return unsubscribe; 
+  }, [favoriteMeals, pageTitle]);
+
 
   return (
     <View style={stylesFn.container}>

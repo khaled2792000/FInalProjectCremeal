@@ -16,12 +16,13 @@ import { Button } from "@rneui/themed";
 import { get_prediction_ingredients } from "../../assets/utils/api/objectD_api";
 import { user_generate_meals } from "../../assets/utils/api/user_api";
 import AppLoader from "../components/AppLoader";
-import { Toasterror, DialogErrorButton, ToastwarningPress } from "../components/alerts";
+import { Toasterror, DialogErrorButton, ToastwarningPress,Toastwarning } from "../components/alerts";
 import { Dialog, Toast } from "react-native-alert-notification";
 import {  BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import BottomSheet from '@gorhom/bottom-sheet';
-
-import {  useSelector } from 'react-redux';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserInformation } from '../../redux/slices/userSlice';
 
 
 export function CameraPage({ navigation }) {
@@ -35,6 +36,7 @@ export function CameraPage({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
   const userInformation = useSelector((state) => state.user.userInformation);
+  const dispatch = useDispatch();
 
 
   const devices = Camera.getAvailableCameraDevices();
@@ -81,10 +83,20 @@ export function CameraPage({ navigation }) {
       .then((result) => {
         setLoading(false);
         if (result && result.data && result.status == '200') {
-          navigation.navigate("GeneratedMeal", {
-            meals: [result.data],
-            title: "Suggested meals",
-          });
+
+          const updatedUserInformation = {
+            ...userInformation,
+            coins: userInformation.coins - 1,
+          };
+          AsyncStorage.setItem("userInformation", JSON.stringify(updatedUserInformation));
+          dispatch(setUserInformation(updatedUserInformation));
+
+          setTimeout(() => {
+            navigation.navigate("GeneratedMeal", {
+              meals: [result.data],
+              title: "Suggested meals",
+            });
+          }, 500);
         } else if (result.response.status == '400' && result.response.data == "You have no premesion to generate meals check your conis") {
           DialogErrorButton(
             "Error",
@@ -176,9 +188,16 @@ export function CameraPage({ navigation }) {
   };
 
   const sendFrameToServer = async (uri) => {
+
     get_prediction_ingredients(uri).then((result) => {
       console.log(result)
-      console.log("data",result.data)
+      console.log("data",result.data.l)
+      if (result.data.length == 0) {
+        Toastwarning(
+          "Nothing detected",
+          "Make sure the ingredients are visible for the camera."
+        );
+      }
       console.log(itemTitles)
       console.log(items)
       result.data.forEach((element) => {

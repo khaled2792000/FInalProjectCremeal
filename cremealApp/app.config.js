@@ -43,12 +43,7 @@ export default {
           "enableFrameProcessors": true
         }
       ],
-      [
-        "react-native-fast-tflite",
-        {
-          "enableCoreMLDelegate": true
-        }
-      ]
+
     ],
     "extra": {
       "eas": {

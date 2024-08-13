@@ -24,11 +24,10 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Dialog} from "react-native-alert-notification";
 import { useIsFocused,useFocusEffect  } from "@react-navigation/native";
 
-
 export function HomeScreen({ navigation }) {
   const [userMeal, setUserMeals] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [FavoriteMeals, setFavoriteMeals] = useState([]);
+  const [FavoriteMeals, setFavoriteMealsState] = useState([]);
   const [pendingApiCalls, setPendingApiCalls] = useState(2);
   const [isExpired, setisExpired] = useState(false);
   const dispatch = useDispatch();
@@ -46,18 +45,22 @@ export function HomeScreen({ navigation }) {
       };
 
       user_get_meals(userInformation)
-        .then((result) => {
-          const allMeals = result.data;
-          setUserMeals(allMeals);
-          const favoriteMeals = allMeals.filter((meal) => meal.favorite);
-          setFavoriteMeals(favoriteMeals);
-
-        })
-        .catch((err) => {
-          setisExpired(true);
-          console.log("user_get_meals error: " + err);
-        })
-        .finally(decrementPendingApiCalls);
+      .then((result) => {
+        const allMeals = result.data;
+        setUserMeals(allMeals);
+        const favoriteMeals = allMeals.filter((meal) => meal.favorite);
+        setFavoriteMealsState(favoriteMeals);
+        dispatch({
+          type: 'FavoriteMeal/setFavoriteMeals',
+          payload: favoriteMeals,
+        });
+      })
+      .catch((err) => {
+        setisExpired(true);
+        console.log("user_get_meals error: " + err);
+      })
+      .finally(decrementPendingApiCalls);
+    
 
       user_get_image(userInformation)
         .then((result) => {
@@ -126,12 +129,13 @@ export function HomeScreen({ navigation }) {
       dispatch(setUserImage(null));
   
       const isSignedIn = await GoogleSignin.isSignedIn();
+      const WebClientId = process.env.EXPO_PUBLIC_WebClientId 
       if (isSignedIn) {
         GoogleSignin.configure({
             webClientId:
-            process.env.WebClientId,
+            WebClientId,
           });
-        
+
         dispatch(setUser_login_google(false));
         await GoogleSignin.revokeAccess();
         await GoogleSignin.signOut();
@@ -199,7 +203,7 @@ export function HomeScreen({ navigation }) {
               </Text>
               <TouchableHighlight
                 onPress={() => {
-                  seeAll("Favorite meal", FavoriteMeals);
+                  seeAll("Favorite meal");
                 }}
                 underlayColor="white"
               >

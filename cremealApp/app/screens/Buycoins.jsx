@@ -35,7 +35,7 @@ const SelectPlanScreen = ({ navigation }) => {
   const [isReady, setIsReady] = useState(false);
   const [isBackButtonHide, setBackButton] = useState(true);
   const { confirmPayment, loading } = useConfirmPayment();
-  const PUBLISHABLE_KEY = process.env.PUBLISHABLE_KEY;
+  const PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_PUBLISHABLEKEY;
   const dispatch = useDispatch();
   const userInformation = useSelector((state) => state.user.userInformation);
   const [Apploading, setLoading] = useState(true);
@@ -45,7 +45,6 @@ const SelectPlanScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (!isFocused || !userInformation) return;
-
     const decrementPendingApiCalls = () => {
       setPendingApiCalls((prevCount) => prevCount - 1);
     };

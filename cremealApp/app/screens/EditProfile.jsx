@@ -179,12 +179,12 @@ export function EditProfile() {
               <Controller
                 control={control}
                 render={({ field }) => (
-                  <View style={styles.fieldRow2}>
+                  <View style={stylesFn.fieldRow2}>
                     <Text>Edit Name</Text>
-                    <View style={styles.inputRow2}>
+                    <View style={stylesFn.inputRow2}>
                       <TextInput
                         {...field}
-                        style={[styles.input2]}
+                        style={[stylesFn.input2]}
                         placeholder={userInfo.name}
                         onChangeText={(newText) => setNameText(newText)}
                         onBlur={field.onBlur}
@@ -196,18 +196,18 @@ export function EditProfile() {
                 name={"name"}
               />
               {errors.name && (
-                <Text style={styles.errorText2}>{errors.name.message}</Text>
+                <Text style={stylesFn.errorText2}>{errors.name.message}</Text>
               )}
 
               <Controller
                 control={control}
                 render={({ field }) => (
-                  <View style={styles.fieldRow2}>
+                  <View style={stylesFn.fieldRow2}>
                     <Text>Edit Email</Text>
-                    <View style={styles.inputRow2}>
+                    <View style={stylesFn.inputRow2}>
                       <TextInput
                         {...field}
-                        style={[styles.input2]}
+                        style={[stylesFn.input2]}
                         placeholder={userInfo.email}
                         onChangeText={(newText) => setEmailText(newText)}
                         onBlur={field.onBlur}
@@ -219,7 +219,7 @@ export function EditProfile() {
                 name={"email"}
               />
               {errors.email && (
-                <Text style={styles.errorText2}>{errors.email.message}</Text>
+                <Text style={stylesFn.errorText2}>{errors.email.message}</Text>
               )}
               <Text style={{ textAlign: "center" }}>
                 -------------------------

@@ -26,12 +26,13 @@ const LoginScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const webClientId = process.env.WebClientId;
-    console.log("process.env.WebClientId: ", webClientId)
+    const webClientId = process.env.EXPO_PUBLIC_WebClientId;
     GoogleSignin.configure({
-      webClientId: process.env.WebClientId,
+      webClientId: webClientId,
     });
   }, []);
+
+
 
   const signin = async () => {
     try {
@@ -101,7 +102,7 @@ const LoginScreen = ({ navigation }) => {
           AsyncStorage.setItem("userInformation", JSON.stringify(result.data));
           // setLoading(false);
           navigation.navigate("HomeScreen");
-        }else if(result.response.status == '400' && result.response.data == "Something went wrong no user retuerned" || result.response.status == '400' && result.response.data.title == "One or more validation errors occurred.") {
+        }else if(result.response.status == '400' && result.response.data == "Something went wrong no user retuerned" || result.response.status == '400' && result.response.data.title == "One or more validation errors occurred." || result.response.status == '400' && result.response.data == "Email and password are required." ) {
 
           Toastwarning('Error','Invalid email or password')
 
