@@ -84,7 +84,7 @@ namespace CremealServer.Models
                 // Read and replace placeholders in HTML template
                 string htmlString = File.ReadAllText(filePath);
                 htmlString = htmlString
-                    .Replace("{userName}", userName)
+                    .Replace("{recipientEmail}", userName)
                     .Replace("{message}", body)
                     .Replace("{currentYear}", DateTime.Now.Year.ToString());
 

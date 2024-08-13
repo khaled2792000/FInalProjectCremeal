@@ -26,6 +26,8 @@ body {
   animation: fadeInUp 1s ease-in-out;
 }
 
+
+
 .button-container {
   display: flex;
   gap: 1rem;

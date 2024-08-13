@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import {
   Backdrop,
@@ -14,10 +14,32 @@ import { useFormik } from "formik";
 
 import messageSchema from "../schemas/schema_message";
 import UsersTable from "./UsersTable";
+import { UserContext } from "../App";
+import { useSendEmailToUsers } from "../assets/api/apiFunctions";
+import { SplitText } from "./SplitText ";
 
 export default function UsersTableScreen() {
   const [showForm, setShowForm] = useState(false);
-  const onSubmit = () => {};
+  const [userSelected, setUsersSelected] = useState([]);
+  const { token } = useContext(UserContext);
+  const { mutate, isLoading, isError, error, isSuccess } =
+    useSendEmailToUsers(token);
+
+  const onSubmit = async (values, actions) => {
+    actions.resetForm();
+    console.log(values);
+    console.log(userSelected);
+    mutate({
+      Emails: userSelected,
+      Body: values.message,
+      Subject: values.subject,
+      Title: values.title,
+    });
+
+    if (!isLoading) {
+      setShowForm(false);
+    }
+  };
   const {
     values,
     handleBlur,
@@ -44,10 +66,14 @@ export default function UsersTableScreen() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          height: `80vh`,
         }}
       >
         {!showForm ? (
-          <UsersTable setShowForm={setShowForm} />
+          <UsersTable
+            setShowForm={setShowForm}
+            setUsersSelected={setUsersSelected}
+          />
         ) : (
           <Paper sx={{ padding: 10 }}>
             <Grid
@@ -125,7 +151,7 @@ export default function UsersTableScreen() {
                   type="submit"
                   variant="contained"
                   disabled={isSubmitting}
-                  onClick={() => setShowForm(false)}
+                  onClick={onSubmit}
                 >
                   Send
                 </Button>

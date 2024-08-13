@@ -119,7 +119,7 @@ namespace CremealServer.Controllers
             try
             {
                 var transactions = Transaction.GetAll();
-                if (transactions == null || transactions.Count == 0)
+                if (transactions == null )
                 {
                     OurLogger.Instance.LogInfo("No transactions found in the system.");
                     return NotFound("No transactions found.");
