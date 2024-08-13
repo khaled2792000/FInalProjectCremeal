@@ -401,6 +401,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-/CremealServer/CremealServer/Images
+/CremealServer/CremealServer/Images/Meals
+/CremealServer/CremealServer/Images/UserUsersImages/*.jpg
 CremealServer/CremealServer/log.txt
 appsettings.json
+*.jpg
