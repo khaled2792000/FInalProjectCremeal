@@ -86,7 +86,15 @@
         {
             string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [{level}] {message}";
             Console.WriteLine(logMessage); // Output to console
-            File.AppendAllText(logFilePath, logMessage + Environment.NewLine); // Write to file
+
+            try
+            {
+                File.AppendAllText(logFilePath, logMessage + Environment.NewLine); // Write to file
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"Failed to write to log file: {ex.Message}");
+            }
         }
 
     }
