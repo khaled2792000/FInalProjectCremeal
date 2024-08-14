@@ -191,7 +191,6 @@ export function CameraPage({ navigation }) {
 
     get_prediction_ingredients(uri).then((result) => {
       console.log(result)
-      console.log("data",result.data.l)
       if (result.data.length == 0) {
         Toastwarning(
           "Nothing detected",

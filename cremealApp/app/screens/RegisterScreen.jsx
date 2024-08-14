@@ -50,7 +50,6 @@ const RegisterScreen = () => {
 
   const onContinue = (data) => {
     Keyboard.dismiss();
-
     console.log(data);
     setSubmittedData(data);
     setNextInputs(true);

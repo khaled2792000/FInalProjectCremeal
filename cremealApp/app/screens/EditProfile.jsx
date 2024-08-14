@@ -29,6 +29,7 @@ import AppLoader from "../components/AppLoader";
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserInformation, setUserImage } from '../../redux/slices/userSlice';
 import { useIsFocused } from "@react-navigation/native";
+import { Toasterror,Toastsuccess } from "../components/alerts";
 
 export function EditProfile() {
   const [isBusy, setBusy] = useState(true);
@@ -101,7 +102,9 @@ export function EditProfile() {
             setImage(imageUri); 
           }
         })
-        .catch((err) => console.log("user_upload_image: ", err));
+        .catch((err) =>{
+          Toasterror("Error", "Failed to update image.");
+          console.log("user_upload_image: ", err)})
     }
     
   };
@@ -128,10 +131,12 @@ export function EditProfile() {
           dispatch(setUserInformation(updatedUserInfo));
           AsyncStorage.setItem("userInformation", JSON.stringify(updatedUserInfo));
           console.log("Profile updated successfully.");
-
+          Toastsuccess("Success", "User profile has been successfully updated.")
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        Toasterror("Error", "Failed to user update profile.");
+        console.log("user_update_profile: ", err)})
   };
 
   return (
@@ -157,7 +162,7 @@ export function EditProfile() {
               <TouchableOpacity onPress={pickImage}>
                 <Image
                   style={stylesFn.profileImg}
-                  source={{ uri: image ?? UserImage }}
+                  source={{ uri: image ?? UserImage }}    
                 />
               </TouchableOpacity>
               <View

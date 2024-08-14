@@ -19,18 +19,44 @@ import {
 } from "../../assets/utils/api/forget_api";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Notifications from "expo-notifications";
+import { Toasterror } from "../components/alerts";
+
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const passwordSchema = z.object({
+  password: z.string()
+    .min(6, { message: "Password must be at least 6 characters long" })
+    .regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter" })
+    .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter" })
+    .regex(/^\S*$/, { message: "Password must not contain spaces" })
+    .regex(/[!@#$%^&*()\-_=+{}[\]|;:'",<.>/?\\~`]/, { message: "Password must contain at least one special character" }),
+  CPassword: z.string().min(6, { message: "Confirm Password must be at least 6 characters long" }),
+}).refine((data) => data.password === data.CPassword, {
+  message: "Passwords must match",
+  path: ["CPassword"],
+});
+
+const emailSchema = z.object({
+  email: z.string().email({ message: "Invalid email address" }),
+});
+
 
 const { width, height } = Dimensions.get("window");
 const ForgetPassword = ({ navigation }) => {
   const [forgetScreenIndex, setForgetScreenIndex] = useState(0);
   const [userId, setUserId] = useState(-1);
   const [userEmail, setUserEmail] = useState(null);
+  const selectedSchema = forgetScreenIndex === 0 ? emailSchema : (forgetScreenIndex === 2 ? passwordSchema : null);
+
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: selectedSchema ? zodResolver(selectedSchema) : undefined,
+  });
 
   const schedulingOptions = {
     content: {
@@ -59,6 +85,8 @@ const ForgetPassword = ({ navigation }) => {
       })
       .catch((err) => {
         console.log(err);
+        Toasterror("Error", "Failed to send Code.");
+
       });
   };
   const sendCodeAgain = () => {
@@ -69,17 +97,19 @@ const ForgetPassword = ({ navigation }) => {
   };
 
   const resetPassword = (data) => {
+    console.log("5")
     Keyboard.dismiss();
-    if (data.password == data.confirmPassword) {
+    if (data.password == data.CPassword) {
       forget_Reset_password(userId, data.password)
         .then((result) => {
           if (result.status == 200) {
             reset();
             setForgetScreenIndex(2);
-            navigation.navigate("HomeScreen");
+            navigation.navigate("LoginScreen");
           }
         })
         .catch((err) => {
+          Toasterror("Error", "Failed to reset Password.");
           console.log(err);
         });
     }
@@ -95,6 +125,8 @@ const ForgetPassword = ({ navigation }) => {
         }
       })
       .catch((err) => {
+        Toasterror("Error", "Failed to verify Code.");
+
         console.log(err);
       });
   };
@@ -181,15 +213,17 @@ const ForgetPassword = ({ navigation }) => {
             placeHolder={"*******"}
             IsItPassword={true}
             inputName={"password"}
-            errors={errors}
+            tiperror={errors.password?.message}
+
           />
           <InputFiled
             control={control}
             Label={"Confirm password"}
             placeHolder={"*******"}
             IsItPassword={true}
-            inputName={"confirmPassword"}
-            errors={errors}
+            tiperror={errors.CPassword?.message}
+            inputName={"CPassword"}
+
           />
 
           <FormButton
