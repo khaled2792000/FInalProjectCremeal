@@ -186,7 +186,7 @@ export default function GeneralAnalytics() {
           <Grid
             item
             sx={{
-              height: "100%",
+              maxHeight: "500px",
               overflowY: "scroll",
               margin: 2,
               background: "#ece5f4",
@@ -202,7 +202,7 @@ export default function GeneralAnalytics() {
                   <Card key={index} sx={{ margin: 1 }}>
                     <CardHeader
                       title={`Transaction #${transaction.Id}`}
-                      subheader={`Date: ${formattedDate}`} // Use formattedDate here
+                      subheader={`Date: ${formattedDate}`}
                     />
 
                     <Card sx={{ padding: 2 }}>
