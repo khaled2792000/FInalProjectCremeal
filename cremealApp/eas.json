@@ -24,6 +24,10 @@
       },
       "ios": {
         "simulator": true
+      },
+      "env": {
+        "EXPO_PUBLIC_WebClientId":"526943022894-gkqa1gkor3uji9oorglnl1q29d19qjid.apps.googleusercontent.com",
+        "EXPO_PUBLIC_PUBLISHABLEKEY":"pk_test_51PQdrEJDjk3FEs5Uu8N9EKQAsOHoVWfXKSWiJXKasUZNIXbFGQY3Sb6mmnE97511z4s023E9DMxQfvd754peYEOc00mTRWe9H7"
       }
     },
     "production": {

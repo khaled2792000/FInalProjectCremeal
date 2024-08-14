@@ -9,6 +9,8 @@ import AppLoader from "./app/components/AppLoader";
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import MainApp from './MainApp';
+import * as Notifications from 'expo-notifications'
+import Constants from 'expo-constants'
 
 export default function App() {
   const [isAppFirstLaunched, setIsAppFirstLaunched] = useState(null);
@@ -64,8 +66,15 @@ export default function App() {
     return unsubscribe;
   }, []);
 
+  const askNotification = async () => {
+    const { status } = await Notifications.requestPermissionsAsync()
+    if (Constants.isDevice && status === 'granted') {
+      console.log('Notification permissions granted.')
+    }
+  }
+
   useEffect(() => {
-    // askNotification();
+    askNotification();
     async function fetchFirstLaunched() {
       try {
         const appData = await AsyncStorage.getItem('isAppFirstLaunched');
@@ -81,6 +90,9 @@ export default function App() {
         console.log("fetchFirstLaunched error :" + e);
       }
     }
+
+
+
     async function fetchUserInformation() {
       try {
         const userInformation = await AsyncStorage.getItem('userInformation');

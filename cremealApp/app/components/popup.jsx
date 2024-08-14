@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         paddingHorizontal: 10,
         position: 'absolute',
-        top: 36,
+        top: 55,
         right: 10,
         shadowColor: "#000",
         shadowOffset: {
