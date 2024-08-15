@@ -94,12 +94,14 @@ export function EditProfile() {
     if (!result.canceled && result.assets[0].uri) {
       
       const imageUri = result.assets[0].uri; 
-      user_upload_image(userInfo, imageUri)
+      const imageUriWithTime = `${imageUri}?t=${Math.floor(Date.now() / 1000)}`;
+      user_upload_image(userInfo, imageUriWithTime)
         .then((response) => {
           if (response.status === 200) {
             dispatch(setUserImage(imageUri));
-            console.log("Image updated successfully.");        
-            setImage(imageUri); 
+            console.log("Image updated successfully. ",imageUriWithTime);        
+            setImage(imageUriWithTime); 
+
           }
         })
         .catch((err) =>{

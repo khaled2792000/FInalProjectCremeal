@@ -97,7 +97,7 @@ export function CameraPage({ navigation }) {
               title: "Suggested meals",
             });
           }, 500);
-        } else if (result.response.status == '400' && result.response.data == "You have no premesion to generate meals check your conis") {
+        } else if (result.response.status == '400' && result.response.data == "You do not have permission to generate meals. Check your coins.") {
           DialogErrorButton(
             "Error",
             "You don't have enough coins to generate a meal",

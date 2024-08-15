@@ -64,7 +64,7 @@ export function HomeScreen({ navigation }) {
       user_get_image(userInformation)
         .then((result) => {
           if (result.status == 200) {
-            dispatch(setUserImage(apiUrl + "/Images/UsersImages/" + result.data+`?t=${new Date().getDate()}`));
+            dispatch(setUserImage(apiUrl + "/Images/UsersImages/" + result.data+`?t=${Math.floor(Date.now() / 1000)}`));
             console.log("Image data found: ", apiUrl + "/Images/UsersImages/" + result.data);
 
           } else {
